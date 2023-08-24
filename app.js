@@ -1,31 +1,30 @@
 const tabl = document.querySelector('#tabl'); // Отримання елементу таблиці
-const p = document.querySelector('p'); // Отримання елементу <p>
 const button = document.querySelector('.button'); // Отримання кнопки "Рестарт"
+const p = document.querySelector('p'); // Отримання елементу <p>
 let number = 0; // Лічильник ходів
 let arr = []; // Масив для зберігання ходів гравців
 
-// Обробник події кліку на кнопці "Рестарт"
 button.onclick = () => {
   resetGame();
 };
 
 // Обробник події кліку на елементах таблиці
 tabl.onclick = (event) => {
-  event.target.style.color = 'black'; // Зміна кольору тексту на чорний
+  // event.target.style.color = 'black'; // Зміна кольору тексту на чорний
 
   if (!event.target.classList.contains('btn')) return; // Якщо клік не на кнопці, вийти
 
-  let key = event.target.textContent; // Отримання значення кнопки
-  if (arr.includes(key)) return; // Якщо кнопка вже обрана, вийти
+  let key = event.target.id; // Отримання значення id елемента, на який було спрямовано подію
+  if (arr[key] !== undefined) return; // Якщо кнопка вже обрана, вийти
 
   const player = number % 2 === 1 ? 'O' : 'X'; // Визначення поточного гравця
   const color = player === 'O' ? 'red' : 'blue'; // Визначення кольору для відображення
 
   number += 1; // Збільшення лічильника ходів
-  arr[key - 1] = player; // Збереження ходу гравця
+  arr[key] = player; // Збереження ходу гравця
   event.target.textContent = player; // Встановлення значення кнопки
   event.target.style.color = color; // Зміна кольору тексту кнопки
-
+  console.log(arr);
   audit(); // Перевірка на виграш
 };
 
@@ -51,14 +50,14 @@ function audit() {
 
       table.classList.add('table_red'); // Додавання класу для виділення таблиці
       p.classList.add('p_red'); // Додавання класу для виділення тексту
-      setTimeout(resetGame, 5000); // Очікування 5 секунд і рестарт гри
+
       return;
     } else if (arr[a] === 'X' && arr[b] === 'X' && arr[c] === 'X') {
       p.textContent = 'Перемогли Х';
 
       table.classList.add('table_blue'); // Додавання класу для виділення таблиці
       p.classList.add('p_blue'); // Додавання класу для виділення тексту
-      setTimeout(resetGame, 5000); // Очікування 5 секунд і рестарт гри
+
       return;
     }
   }
@@ -66,12 +65,12 @@ function audit() {
   // Якщо гра завершилася нічийним результатом або нічия
   if (number === 9) {
     p.textContent = 'Гра завершилася нічиєю';
-    setTimeout(resetGame, 5000); // Очікування 5 секунд і рестарт гри
   }
 }
 
 // Рестарт гри
 function resetGame() {
+  console.log('reset');
   arr.length = 0; // Очищення масиву ходів
   number = 0; // Скидання лічильника ходів
 
@@ -81,9 +80,8 @@ function resetGame() {
     cell.classList.remove('x', 'o'); // Видалення класів x і o
     cell.style.color = 'white'; // Зміна кольору тексту на білий
   }
-
   p.textContent = ''; // Очищення тексту <p>
-  table.classList.remove('table_red', 'table_blue'); // Видалення класів для виділення таблиці
+  tabl.classList.remove('table_red', 'table_blue'); // Видалення класів для виділення таблиці
 
   p.classList.remove('p_red', 'p_blue'); // Видалення класів для виділення тексту
 }
